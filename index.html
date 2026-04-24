@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waiting List Closed — HACLB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --cyan: #05c3de;
+    --cyan-dark: #048aa0;
+    --cyan-soft: #e6f9fc;
+    --cyan-softer: #f3fcfd;
+    --red: #de3c31;
+    --red-dark: #b52e24;
+    --red-soft: #fde9e7;
+    --paper: #fafaf7;
+    --paper-warm: #f5f3ed;
+    --ink: #1a2530;
+    --ink-soft: #4a5766;
+    --ink-muted: #7a8695;
+    --rule: #e4e2db;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    background: var(--paper);
+    position: relative;
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 80% 20%, var(--cyan-softer) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 10% 90%, var(--paper-warm) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .stage::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/></svg>");
+    mix-blend-mode: multiply; opacity: 0.5;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    position: relative; z-index: 2;
+    height: 11vh; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3.5vw;
+    border-bottom: 0.1vw solid var(--rule);
+  }
+
+  .header-left { display: flex; align-items: center; }
+
+  .header-logo {
+    height: 6.5vh; width: auto;
+    opacity: 1;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 0.9vw; }
+
+  .pulse {
+    width: 0.6vw; height: 0.6vw;
+    background: var(--red); border-radius: 50%;
+    animation: ping 2.4s ease-out infinite;
+  }
+
+  @keyframes ping {
+    0%   { box-shadow: 0 0 0 0 rgba(222,60,49,0.65); }
+    100% { box-shadow: 0 0 0 1.5vw rgba(222,60,49,0); }
+  }
+
+  .header-right .txt {
+    font-size: 0.75vw; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* ===== MAIN ===== */
+  .main {
+    position: relative; z-index: 2;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  /* ---- LEFT ---- */
+  .left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 4vh 3vw 4vh 3.5vw;
+    border-right: 0.1vw solid var(--rule);
+    gap: 2.8vh;
+    animation: fadeUp 0.9s 0.1s both cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6vw;
+    padding: 0.5vw 1vw;
+    background: var(--red-soft); color: var(--red-dark);
+    border-radius: 10vw;
+    font-size: 0.7vw; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  .eyebrow .dot {
+    width: 0.4vw; height: 0.4vw;
+    background: var(--red); border-radius: 50%;
+    animation: pulsedot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulsedot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.65); }
+  }
+
+  .headline {
+    font-family: 'Fraunces', serif;
+    font-size: 5.5vw; font-weight: 700;
+    line-height: 1.0; letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+
+  .headline em {
+    font-style: italic; font-weight: 400;
+    color: var(--red-dark);
+  }
+
+  .subline {
+    font-size: 1.3vw; font-weight: 400;
+    line-height: 1.65; color: var(--ink-soft);
+  }
+
+  .subline strong { font-weight: 600; color: var(--ink); }
+
+  .sign-off {
+    font-family: 'Fraunces', serif;
+    font-style: italic; font-size: 1.3vw;
+    color: var(--ink-muted);
+    padding-top: 2vh;
+    border-top: 0.1vw solid var(--rule);
+  }
+
+  /* ---- RIGHT ---- */
+  .right {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 4vh 3.5vw 4vh 3vw;
+    gap: 2.8vh;
+    animation: fadeUp 0.9s 0.25s both cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .right-kicker {
+    display: inline-flex; align-items: center; gap: 0.6vw;
+    font-size: 0.7vw; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--cyan-dark);
+  }
+
+  .right-kicker .tick {
+    width: 1.2vw; height: 0.15vw;
+    background: var(--cyan); border-radius: 0.1vw;
+  }
+
+  .right-heading {
+    font-family: 'Fraunces', serif;
+    font-size: 2vw; font-weight: 600;
+    line-height: 1.25; letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .right-body {
+    font-size: 1.15vw; font-weight: 400;
+    line-height: 1.6; color: var(--ink-soft);
+  }
+
+  /* Website row */
+  .website-row {
+    display: flex; align-items: center; gap: 1.2vw;
+    background: #fff;
+    border: 0.08vw solid var(--rule);
+    border-radius: 0.8vw;
+    padding: 1.4vh 1.6vw;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0.3vw 1vw rgba(26,37,48,0.05);
+  }
+
+  .website-row::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0.3vw; background: var(--cyan);
+  }
+
+  .website-icon {
+    width: 2.8vw; height: 2.8vw;
+    background: var(--cyan-soft); border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--cyan-dark); flex-shrink: 0;
+  }
+
+  .website-icon svg { width: 1.4vw; height: 1.4vw; }
+
+  .website-text .wlabel {
+    font-size: 0.65vw; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-muted); margin-bottom: 0.3vw;
+  }
+
+  .website-text .wurl {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5vw; font-weight: 600;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+
+  /* QR row */
+  .qr-row {
+    display: flex; align-items: center; gap: 1.8vw;
+    background: #fff;
+    border: 0.08vw solid var(--rule);
+    border-radius: 0.8vw;
+    padding: 1.4vh 1.6vw;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0.3vw 1vw rgba(26,37,48,0.05);
+  }
+
+  .qr-row::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0.3vw; background: #FFA300;
+  }
+
+  #qrcode { line-height: 0; flex-shrink: 0; }
+  #qrcode canvas, #qrcode img {
+    width: 7vw !important; height: 7vw !important;
+    border-radius: 0.2vw; display: block;
+  }
+
+  .qr-text .qlabel {
+    font-size: 0.65vw; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-muted); margin-bottom: 0.4vw;
+  }
+
+  .qr-text .qdesc {
+    font-size: 1.1vw; color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    position: relative; z-index: 2;
+    height: 6vh; flex-shrink: 0;
+    display: flex; align-items: center;
+    padding: 0 3.5vw;
+    border-top: 0.1vw solid var(--rule);
+    background: rgba(245,243,237,0.5);
+    backdrop-filter: blur(6px);
+  }
+
+  .footer-left {
+    display: flex; align-items: center; gap: 1vw;
+    font-size: 0.7vw; font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .color-dots { display: inline-flex; gap: 0.4vw; align-items: center; }
+  .color-dots span { width: 0.55vw; height: 0.55vw; border-radius: 50%; }
+  .color-dots span:nth-child(1) { background: var(--cyan); }
+  .color-dots span:nth-child(2) { background: var(--red); }
+  .color-dots span:nth-child(3) { background: #FFA300; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(1.5vh); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <header class="header">
+    <div class="header-left">
+      <img class="header-logo"
+        src="https://raw.githubusercontent.com/reneordona/hawaiting/6ab2e95f6b654a5b0f2e2d7eed48b3eccc6a0dca/Housing%20Authority%20Logo%20-%20Landscape%20Version-72dpi%20for%20ScreenAndWeb%20-%20Transparent%20BG.png"
+        alt="Housing Authority of the City of Long Beach">
+    </div>
+    <div class="header-right">
+      <div class="pulse"></div>
+      <div class="txt">Waiting List Status</div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <div class="left">
+      <div class="eyebrow"><div class="dot"></div><span>Current Status</span></div>
+      <div class="headline">Waiting List<br>Is <em>Closed</em></div>
+      <p class="subline">
+        Thank you for visiting the <strong>Housing Authority of the City of Long Beach.</strong>
+        At this time, our <strong>waiting lists are closed.</strong> When the lists reopen,
+        we will share information on our <strong>website and social media.</strong>
+      </p>
+      <div class="sign-off">We appreciate your understanding.</div>
+    </div>
+
+    <div class="right">
+      <div class="right-kicker"><span class="tick"></span><span>Stay Informed</span></div>
+      <div class="right-heading">Check our website for updates<br>when lists reopen.</div>
+      <p class="right-body">We'll post announcements as soon as waiting lists become available again.</p>
+
+      <div class="website-row">
+        <div class="website-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <div class="website-text">
+          <div class="wlabel">Official Website</div>
+          <div class="wurl">longbeach.gov/haclb</div>
+        </div>
+      </div>
+
+      <div class="qr-row">
+        <div id="qrcode"></div>
+        <div class="qr-text">
+          <div class="qlabel">Scan to Visit</div>
+          <div class="qdesc">Scan with your phone to visit our website directly.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="color-dots"><span></span><span></span><span></span></div>
+      <span>Housing Authority of the City of Long Beach</span>
+    </div>
+  </footer>
+
+</div>
+<script>
+  function buildQR() {
+    var qrSize = Math.round(window.innerWidth * 0.07);
+    document.getElementById("qrcode").innerHTML = "";
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://www.longbeach.gov/haclb/",
+      width: qrSize, height: qrSize,
+      colorDark: "#1a2530", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+  buildQR();
+  window.addEventListener('resize', buildQR);
+</script>
+</body>
+</html>
